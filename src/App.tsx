@@ -1,25 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
+import {Character} from "./model/Character";
+import Characters from "../../rickandmorty_m/src/characters.json"
+import CharacterGallery from "./component/CharacterGallery";
+import React, {useState} from "react";
+import InputUser from "./component/InputUser";
+import axios from "axios";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+
+
+    //const characters: Character[] = Characters;
+
+    const[characters, setCharacters] = useState<Character[]>([])
+    const[text, setText] = useState<string>("")
+
+    function getCharacters(){
+        axios.get("https://rickandmortyapi.com/api/character")
+        .then((response) => {
+            console.log(response.data.results)
+            setCharacters(response.data.results);})
+            .catch((error) => {
+                console.error(error);
+            })
+
+    }
+
+    function handleText(text: string){
+        setText(text)
+    }
+
+    function characterSearch(characters: Character[], text: string){
+        return characters.filter(character =>
+        {return text.includes(character.name)})
+    }
+
+    const myCharacterSearch = characterSearch(characters, text);
+    console.log(characterSearch)
+
+
+
+    return (
+    <div className={"App"}>
+        <h1>Rick and Morty Gallery</h1>
+
+        <button onClick={getCharacters}>show all Characters</button>
+
+
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+            <InputUser setText={handleText}/>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <CharacterGallery characters={myCharacterSearch}/>
+
+        <p>
+         <CharacterGallery characters={characters}/>
+        </p>
+
     </div>
+
   );
 }
 

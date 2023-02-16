@@ -1,0 +1,15 @@
+.character-card{
+    width: 220px;
+    height: 100%;
+    margin: 1%;
+    border: 1px solid black;
+    border-radius: 50px;
+    box-shadow: 10px 10px 5px 0 rgba(0,0,0,0.75);
+    background-color: burlywood;
+}
+
+.character-card-image{
+    width: 90%;
+    height: auto;
+    border-radius: 50%;
+}
