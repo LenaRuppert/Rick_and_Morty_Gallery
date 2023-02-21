@@ -1,4 +1,5 @@
 import {Origin} from "./Origin"
+import {Episode} from "./Episode";
 
 export type Character = {
 
@@ -7,6 +8,8 @@ export type Character = {
     origin: Origin,
     status: string,
     image: string
+    episode: Episode[],
+    url: string
 
 
 

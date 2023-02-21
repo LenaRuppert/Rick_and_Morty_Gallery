@@ -8,6 +8,14 @@ import InputUser from "./component/InputUser";
 import axios from "axios";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
+import {Episode} from "./model/Episode";
+import EpisodeCard from "./component/EpisodesCard";
+import EpisodeGallery from "./component/EpisodesGallery";
+import Header from "./component/Header";
+import {Route, Routes} from "react-router-dom";
+import HomePage from "./component/HomePage";
+import CharacterCardDetailsPage from "./component/CharacterCardDetailsPage";
+import EpisodeCardDetailsPage from "./component/EpisodeCardDetailsPage";
 
 
 function App() {
@@ -16,7 +24,11 @@ function App() {
     //const characters: Character[] = Characters;
 
     const [characters, setCharacters] = useState<Character[]>([])
+    const [episodes, setEpisodes] = useState<Episode[]>([])
+
+
     const [text, setText] = useState<string>("")
+
 
     function getCharacters() {
         axios.get("https://rickandmortyapi.com/api/character")
@@ -28,10 +40,25 @@ function App() {
                 console.error(error);
             })}
 
+    useEffect(() => {
+        getCharacters()
+    }, [])
 
-        /*useEffect(() => {
-            console.log(characters)
-        }, [characters])*/
+    function getEpisodes() {
+        axios.get("https://rickandmortyapi.com/api/episode")
+            .then((response) => {
+                console.log(response.data.results)
+                setEpisodes(response.data.results);
+            })
+            .catch((error) => {
+                console.error(error);
+            })}
+
+    useEffect(() => {
+        getEpisodes()
+    }, [])
+
+
 
         function handleText(text: string) {
             setText(text)
@@ -48,24 +75,22 @@ function App() {
 
 
         return (
+
             <div className={"App"}>
-                <h1>Rick and Morty Gallery</h1>
-
-                <button onClick={getCharacters}>show all Characters</button>
-
-
-                <InputUser setText={handleText}></InputUser>
-
-
-                <CharacterGallery characters={myCharacterSearch}/>
-
-                <p>
-                    <CharacterGallery characters={characters}/>
-                </p>
-
+                <Header />
+                <Routes>
+                    <Route path={"/"} element={<HomePage/>}/>
+                    <Route path={"/characters"} element={<CharacterGallery characters={characters}/>}/>
+                    <Route path={"/characters/:characterId"} element={<CharacterCardDetailsPage characters={characters}/>}/>
+                    <Route path={"/episodes"} element={<EpisodeGallery episodes={episodes}/>}/>
+                    <Route path={"/episodes/:episodeId"} element ={<EpisodeCardDetailsPage episodes={episodes}/>}/>
+                </Routes>
             </div>
+        )
 
-        );
+    {/* <InputUser setText={handleText}></InputUser>*/}
+
+
     }
 
     export default App;
